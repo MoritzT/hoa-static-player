@@ -7,7 +7,7 @@ Description here
 
 Describe how to embed the javascript
 
-```js
+```html
 <script type="text/javascript" src="hangoutonair.js"></script>
 ```
 
