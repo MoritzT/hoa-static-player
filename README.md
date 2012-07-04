@@ -10,7 +10,7 @@ Describe how to embed the javascript
 Include the JavaScript file from your webserver or from GitHub
 
 ```html
-<script type="text/javascript" src="hangoutonair.js.min"></script>
+<script type="text/javascript" src="hangoutonair.min.js"></script>
 ```
 
 Descripe how to call the showLivePlayer method.
