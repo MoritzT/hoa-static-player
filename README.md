@@ -7,11 +7,15 @@ Description here
 
 Describe how to embed the javascript
 
-```<script type="text/javascript" src="hangoutonair.js"></script>```
+```js
+<script type="text/javascript" src="hangoutonair.js"></script>
+```
 
 Descript how to call the showLivePlayer method
 
-```<script type="text/javascript" id="LivePlayer">showLivePlayer("DariaMusk", "560", "315");</script>```
+```html
+<script type="text/javascript" id="LivePlayer">showLivePlayer("DariaMusk", "560", "315");</script>
+```
 
 **Improtant Notes:**
  - Required `id="Liveplayer"`
