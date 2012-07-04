@@ -6,6 +6,7 @@ Description here
 ### Usage
 
 Describe how to embed the javascript
+
 Include the JavaScript file from your webserver or from GitHub
 
 ```html
