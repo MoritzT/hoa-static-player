@@ -17,5 +17,10 @@ Descript how to call the showLivePlayer method
 <script type="text/javascript" id="LivePlayer">showLivePlayer("DariaMusk", "560", "315");</script>
 ```
 
+**showPlayer parameters:**
+- First parameter is your Youtube UserID
+- Second parameter is your desired width for the player.
+- Second parameter is your desired height for the player.
+
 **Improtant Notes:**
- - Required ```html id="Liveplayer"```
+ - Required ```id="Liveplayer"```
