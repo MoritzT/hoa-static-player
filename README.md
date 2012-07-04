@@ -16,6 +16,7 @@ Include the JavaScript file from your webserver or from GitHub
 Descripe how to call the showLivePlayer method.
 
 Add this part where the player should appear on your website and customize the size to your needs.
+
 Also change the Channelname to the prefered YouTube channel
 
 ```html
