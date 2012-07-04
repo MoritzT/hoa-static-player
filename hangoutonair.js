@@ -1,67 +1,49 @@
 (function(){
     /**
      * Private Variables and Functions
-    */
-    var XMLHttpFactories = [
-		function () {return new XDomainRequest()},
-		function () {return new XMLHttpRequest()},
-		function () {return new ActiveXObject("Msxml2.XMLHTTP")},
-		function () {return new ActiveXObject("Msxml3.XMLHTTP")},
-		function () {return new ActiveXObject("Microsoft.XMLHTTP")}
-    ];
-                     
-	function sendRequest(url, callback) {
-        var req = createXMLHTTPObject();
-        if (!req) return;
-        
-        var method = window.XDomainRequest ? "onload" : "onreadystatechange";
-        req.open("GET", url, true);
-        req[method] = function ()
-        {
-            if (req.readyState != 4) return;
-            
-            if (req.status != 200 && req.status != 304)
-            {
-                return;
-            }
-            
-            callback(req);
-        }
-            
-        if (req.readyState == 4) return;
-        req.send();
+    */                     
+    function sendRequest(url, params, callback) {
+        var magic = '__YTLiveStreams_' + Math.floor( Math.random() * 1000001 ); 
+        window[magic] = callback;
+        params = params || {};
+        params["callback"] = magic;
+        var url_ = buildURL(url, params);
+        var re = document.createElement('script'); re.type = 'text/javascript'; re.async = true;
+        re.src = url_;
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(re, s);
     }
-        
-    function createXMLHTTPObject()
-    {
-        var xmlhttp = false;
-        for (var i=0;i<XMLHttpFactories.length;i++)
+    
+    function buildURL(url, params) {
+        var pairs = [];
+        for(var key in params)
         {
-            try
+            if(!params.hasOwnProperty(key))
             {
-                xmlhttp = XMLHttpFactories[i]();
+            continue;
             }
-            catch (e)
-            {
-                continue;
-            }
-            break;
+
+            pairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
         }
-        
-        return xmlhttp;
+        return url + "?" + pairs.join("&");
     }
                      
     function showLivePlayer(uid, w, h)
     {
-        var url = "https://gdata.youtube.com/feeds/api/users/" + uid + "/live/events?v=2&prettyprint=true&alt=json";
-        sendRequest(url, function(xhr){
-        	if(xhr){
-        		var data = JSON.parse(xhr.responseText);
-	            var parts = data.feed.entry[data.feed.entry.length-1].content.src.split("/");
-	            var vid = parts[parts.length-1].split("?")[0];
-	            console.log(vid);
-	            document.write('<iframe width="' + (w || 560) + '" height="' + (h || 315) + '" src="http://www.youtube.com/embed/' + vid + '" frameborder="0" allowfullscreen></iframe>');
-        	}
+        var url = "https://gdata.youtube.com/feeds/api/users/" + uid + "/live/events";
+        sendRequest(url, {alt:"json", v:"2"}, function(data){
+            if(data){
+                var parts = data.feed.entry[data.feed.entry.length-1].content.src.split("/");
+                var vid = parts[parts.length-1].split("?")[0];
+                console.log(vid);
+                var iframe = document.createElement('iframe');
+                iframe.src = 'http://www.youtube.com/embed/' + vid;
+                iframe.width = (w || 560);
+                iframe.height = (h || 315);
+                iframe.setAttribute("frameborder", "0");
+                iframe.setAttribute("allowfullscreen", "true")
+                var ref = document.getElementById("LivePlayer")
+                ref.parentNode.insertBefore(iframe, ref);
+            }
         });
     }
     window["showLivePlayer"] = showLivePlayer;
