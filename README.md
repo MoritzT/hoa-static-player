@@ -13,7 +13,10 @@ Include the JavaScript file from your webserver or from GitHub
 <script type="text/javascript" src="hangoutonair.js"></script>
 ```
 
-Descripe how to call the showLivePlayer method
+Descripe how to call the showLivePlayer method.
+
+Add this part where the player should appear on your website and customize the size to your needs.
+Also change the Channelname to the prefered YouTube channel
 
 ```html
 <script type="text/javascript" id="LivePlayer">showLivePlayer("DariaMusk", "560", "315");</script>
