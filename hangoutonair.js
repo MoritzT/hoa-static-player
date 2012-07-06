@@ -102,15 +102,18 @@
             /**
              * Get the last entry of the feed
             */
-            var entry = feed.feed.entry[feed.feed.entry.length-1];
-
+            var feed = feed.feed.entry;
+            for(var i = 0 ; i < feed.length; i++){
+                if(feed[i].yt$status.$t == "active" || feed[i].yt$status.$t == "completed"){
+                    var entry = feed[i];
+                }
+            }
+            //console.log(entry);
             /**
              * If there is an entry, parse the required information
             */
             if(entry && entry.content)
             {
-                if(entry.yt$status.$t != "active" || entry.yt$status.$t != "completed"){
-                 
                 /**
                  * Parse the URL and split it into segments to get the last entity
                 */
@@ -134,7 +137,6 @@
                  * Replace the target node with the iframe node
                 */
                 target.parentNode.replaceChild(iframe, target);
-            }
             }
         }.bind(this));
     }
