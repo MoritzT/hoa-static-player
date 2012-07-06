@@ -102,14 +102,15 @@
             /**
              * Get the last entry of the feed
             */
-            var entry = feed.feed.entry[feed.feed.entry];
+            var entry = feed.feed.entry[feed.feed.entry.length-1];
 
             /**
              * If there is an entry, parse the required information
             */
             if(entry && entry.content)
             {
-                if(entry.yt$status.$t == "active" || entry.yt$status.$t == "completed"){
+                if(entry.yt$status.$t != "active" || entry.yt$status.$t != "completed"){
+                 
                 /**
                  * Parse the URL and split it into segments to get the last entity
                 */
