@@ -161,7 +161,17 @@
         /**
          * Build the URL
         */
-        var URL = "https://gdata.youtube.com/feeds/api/users/" + uid + "/live/events?v=2&alt=json-in-script&callback=" + magic;
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth(); //January is 0!
+        if(mm == 0){
+            mm = 11;
+        }
+
+        var yyyy = today.getFullYear();
+        if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} var today = yyyy+'-'+mm+'-'+dd;
+        
+        var URL = "https://gdata.youtube.com/feeds/api/users/" + uid + "/live/events?v=2&alt=json-in-script&max-results=50&starts-after=" +  today + "&callback=" + magic;
 
         /**
          * Create an script element to append to the head
