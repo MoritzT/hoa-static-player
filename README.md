@@ -5,8 +5,11 @@ Allows you to embed the YouTube Live player for Hangouts on Air with a static UR
 
 ### Usage
 **REQUIREMENT**
-JQUERY: 
+
+JQUERY:
+```html 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+```
 
 
 Include the JavaScript file from your webserver or from GitHub
