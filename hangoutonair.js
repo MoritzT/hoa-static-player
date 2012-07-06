@@ -27,24 +27,29 @@
         return url + "?" + pairs.join("&");
     }
                      
-    function showLivePlayer(uid, w, h)
-    {
-        var url = "https://gdata.youtube.com/feeds/api/users/" + uid + "/live/events";
-        sendRequest(url, {alt:"json", v:"2"}, function(data){
-            if(data){
-                var parts = data.feed.entry[data.feed.entry.length-1].content.src.split("/");
-                var vid = parts[parts.length-1].split("?")[0];
-                console.log(vid);
-                var iframe = document.createElement('iframe');
-                iframe.src = 'http://www.youtube.com/embed/' + vid;
-                iframe.width = (w || 560);
-                iframe.height = (h || 315);
-                iframe.setAttribute("frameborder", "0");
-                iframe.setAttribute("allowfullscreen", "true")
-                var ref = document.getElementById("LivePlayer")
-                ref.parentNode.insertBefore(iframe, ref);
-            }
-        });
-    }
-    window["showLivePlayer"] = showLivePlayer;
+    $(document).ready(function(){
+        $('hoaplayer').each(function(){
+            var uid = $(this).attr('id');
+            var w = $(this).attr("width");
+            var h = $(this).attr("height");
+            var ref = $('#'+uid);
+            var url = "https://gdata.youtube.com/feeds/api/users/" + uid + "/live/events";
+
+            sendRequest(url, {alt:"json-in-script", v:"2"}, function(data){
+                if(data){
+                    var parts = data.feed.entry[data.feed.entry.length-1].content.src.split("/");
+                    var vid = parts[parts.length-1].split("?")[0];
+                    var iframe = document.createElement('iframe');
+
+                    iframe.src = 'http://www.youtube.com/embed/' + vid;
+                    iframe.width = (w || 560);
+                    iframe.height = (h || 315);
+                    iframe.setAttribute("frameborder", "0");
+                    iframe.setAttribute("allowfullscreen", "true");
+                    
+                    ref.append(iframe);
+                }
+            });
+        })
+    })
 })()
