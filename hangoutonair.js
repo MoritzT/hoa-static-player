@@ -19,7 +19,7 @@
         {
             if(!params.hasOwnProperty(key))
             {
-            continue;
+            continue; 
             }
 
             pairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
