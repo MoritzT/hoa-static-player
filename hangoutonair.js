@@ -97,62 +97,97 @@
         /**
          * Fetch the latest json feed for the current user
         */
-        this.fetchUserFeed(uid, function(err, feed){
+        this.fetchUserFeed(uid, 0, function(err, feed){
 
             /**
              * Get the last entry of the feed
             */
             var feed = feed.feed.entry;
-            for(var i = 0 ; i < feed.length; i++){
-                if(feed[i].yt$status.$t == "active" || feed[i].yt$status.$t == "completed"){
-                    var entry = feed[i];
+            if(feed){
+                for(var i = 0 ; i < feed.length; i++){
+                    if(feed[i]["yt$status"]["$t"] == "active"){
+                        var entry = feed[i];
+                    }
                 }
-            }
-            //console.log(entry);
-            /**
-             * If there is an entry, parse the required information
-            */
-            if(entry && entry.content)
-            {
                 /**
-                 * Parse the URL and split it into segments to get the last entity
+                 * If there is an entry, parse the required information
                 */
-                var UrlParts = entry.content.src.split("/");
+                if(entry && entry.content)
+                {
+                    /**
+                     * Parse the URL and split it into segments to get the last entity
+                    */
+                    var UrlParts = entry.content.src.split("/");
 
-                /**
-                 * Create an iframe
-                */
-                var iframe = document.createElement('iframe');
+                    /**
+                     * Create an iframe
+                    */
+                    var iframe = document.createElement('iframe');
 
-                /**
-                 * Assign the param to the iframe
-                */
-                iframe.src = 'http://www.youtube.com/embed/' + UrlParts[UrlParts.length-1].split("?")[0];
-                iframe.width = width;
-                iframe.height = height;
-                iframe.setAttribute("frameborder", this.config.playerFrameBorder);
-                iframe.setAttribute("allowfullscreen", this.config.allowFullScreen);
+                    /**
+                     * Assign the param to the iframe
+                    */
+                    iframe.src = 'http://www.youtube.com/embed/' + UrlParts[UrlParts.length-1].split("?")[0];
+                    iframe.width = width;
+                    iframe.height = height;
+                    iframe.setAttribute("frameborder", this.config.playerFrameBorder);
+                    iframe.setAttribute("allowfullscreen", this.config.allowFullScreen);
 
-                /**
-                 * Replace the target node with the iframe node
-                */
-                target.parentNode.replaceChild(iframe, target);
+                    /**
+                     * Replace the target node with the iframe node
+                    */
+                    target.parentNode.replaceChild(iframe, target);
+                }
+            }else{
+                this.fetchUserFeed(uid, 1, function(err, feed){
+                    
+                    var entry = feed.feed.entry;
+                   // console.log(feed);
+                    /**
+                     * If there is an entry, parse the required information
+                    */
+                    if(entry)
+                    {   
+                        console.log(entry[0].id["$t"]);
+                        /**
+                         * Parse the URL and split it into segments to get the last entity
+                        */
+                        var UrlParts = entry[0].id["$t"].split("/");
+                        /**
+                         * Create an iframe
+                        */
+                        var iframe = document.createElement('iframe');
+
+                        /**
+                         * Assign the param to the iframe
+                        */
+                        iframe.src = 'http://www.youtube.com/embed/' + UrlParts[5];
+                        iframe.width = width;
+                        iframe.height = height;
+                        iframe.setAttribute("frameborder", this.config.playerFrameBorder);
+                        iframe.setAttribute("allowfullscreen", this.config.allowFullScreen);
+
+                        /**
+                         * Replace the target node with the iframe node
+                        */
+                        target.parentNode.replaceChild(iframe, target);
+                    }
+                }.bind(this));
             }
         }.bind(this));
     }
-
+    
     /**
      * Fetches a JSON Object from youtube for a specified uid
      * @param uid {String} Username of the feed
      * @param callback {Function(e, feed)} callback to be called
     */
-    HOAPlayer.prototype.fetchUserFeed = function(uid, callback)
+    HOAPlayer.prototype.fetchUserFeed = function(uid, flag, callback)
     {
         /**
          * Create a random function to assign to the global scope
         */
         var magic = '__YTLiveStreams_' + uid + "_" + Math.floor(Math.random() * 1000001);
-
         /**
          * Apply the callback to the root object (window)
         */
@@ -161,18 +196,14 @@
         /**
          * Build the URL
         */
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth(); //January is 0!
-        if(mm == 0){
-            mm = 11;
+        if(flag == 0){
+            var URL = "https://gdata.youtube.com/feeds/api/users/" + uid + "/live/events?v=2&alt=json&status=active&callback=" + magic;
+            //console.log(URL);
         }
-
-        var yyyy = today.getFullYear();
-        if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} var today = yyyy+'-'+mm+'-'+dd;
-        
-        var URL = "https://gdata.youtube.com/feeds/api/users/" + uid + "/live/events?v=2&alt=json-in-script&max-results=50&starts-after=" +  today + "&callback=" + magic;
-
+        if(flag == 1){
+            var URL = "http://gdata.youtube.com/feeds/users/" + uid + "/uploads?alt=json&max-results=1&callback=" + magic;
+            //console.log(URL);
+        }
         /**
          * Create an script element to append to the head
         */
